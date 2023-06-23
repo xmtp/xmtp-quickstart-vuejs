@@ -33,5 +33,5 @@ Then, in your main.js:
 
 ```jsx
 import { Buffer } from 'buffer';
-global.Buffer = Buffer;
+window.Buffer = window.Buffer || Buffer;
 ```# xmtp-quickstart-vuejs
