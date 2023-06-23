@@ -36,5 +36,4 @@ This configuration tells Webpack to provide Buffer whenever it's used, without h
 ```jsx
 import { Buffer } from 'buffer';
 window.Buffer = window.Buffer || Buffer;
-```# xmtp-quickstart-vuejs
-# xmtp-quickstart-vuejs
+```

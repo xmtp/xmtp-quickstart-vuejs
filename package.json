@@ -1,0 +1,20 @@
+{
+  "name": "xmtp-quickstart-vuejs-3",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@xmtp/xmtp-js": "^9.1.7",
+    "buffer": "^6.0.3",
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "rollup-plugin-polyfill-node": "^0.12.0",
+    "vite": "^4.3.9"
+  }
+}
