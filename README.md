@@ -40,7 +40,7 @@ npx create-next-app xmtp-quickstart-nextjs
 ### Install dependencies
 
 ```bash
-npm install @xmtp/xmtp-js @thirdweb-dev/react
+npm install @xmtp/xmtp-js
 ```
 
 ### Configuring the client
@@ -66,6 +66,7 @@ Now that we have the wrapper we can add a button that will sign our user in with
 
 ```tsx
 <div>
+  <!-- Section to connect to the wallet, shown if not connected -->
   <div v-if="!isConnected" class="thirdWeb">
       <button @click="connectWallet" class="btnXmtp">Connect Wallet</button>
   </div>
