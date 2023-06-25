@@ -65,30 +65,33 @@ export default function Index() {
 Now that we have the wrapper we can add a button that will sign our user in with XMTP.
 
 ```tsx
-{
-  isConnected && !isOnNetwork && (
-    <div className={styles.xmtp}>
-      <ConnectWallet theme="light" />
-      <button onClick={initXmtp} className={styles.btnXmtp}>
-        Connect to XMTP
-      </button>
+<div>
+  <div v-if="!isConnected" class="thirdWeb">
+      <button @click="connectWallet" class="btnXmtp">Connect Wallet</button>
+  </div>
+    <!-- Section to connect to XMTP, shown if connected to wallet but not to XMTP -->
+  <div v-if="isConnected && !isOnNetwork" class="xmtp">
+      <button @click="initXmtp" class="btnXmtp">Connect to XMTP</button>
     </div>
-  );
-}
+</div>
 ```
 
 ```tsx
-// Function to initialize the XMTP client
-const initXmtp = async function () {
-  // Create the XMTP client
+// Function to initialize XMTP
+async initXmtp(signer) {
+  // Create a new XMTP client with the signer
   const xmtp = await Client.create(signer, { env: "production" });
-  //Create or load conversation with Gm bot
-  newConversation(xmtp, PEER_ADDRESS);
-  // Set the XMTP client in state for later use
-  setIsOnNetwork(!!xmtp.address);
-  //Set the client in the ref
-  clientRef.current = xmtp;
-};
+
+  // Start a new conversation
+  this.newConversation(xmtp, PEER_ADDRESS);
+
+  // Update the isOnNetwork data property based on whether we have an address
+  this.isOnNetwork = !!xmtp.address;
+
+  // Store the XMTP client reference
+  this.clientRef = xmtp;
+}
+
 ```
 
 ### Load conversation and messages
@@ -96,31 +99,6 @@ const initXmtp = async function () {
 Now using our hooks we are going to use the state to listen when XMTP is connected.
 
 Later we are going to load our conversations and we are going to simulate starting a conversation with one of our bots
-
-```tsx
-useEffect(() => {
-  if (isOnNetwork && convRef.current) {
-    // Function to stream new messages in the conversation
-    const streamMessages = async () => {
-      const newStream = await convRef.current.streamMessages();
-      for await (const msg of newStream) {
-        const exists = messages.find((m) => m.id === msg.id);
-        if (!exists) {
-          setMessages((prevMessages) => {
-            const msgsnew = [...prevMessages, msg];
-            return msgsnew;
-          });
-        }
-      }
-    };
-    streamMessages();
-  }
-}, [messages, isOnNetwork]);
-```
-
-### Listen to conversations
-
-In your component initialize the hook to listen to conversations
 
 ```tsx
 
@@ -139,7 +117,25 @@ async newConversation(xmtp_client, addressTo) {
   } else {
     console.log("cant message because is not on the network.");
   }
-},
+}
+```
+
+### Listen to conversations
+
+In your component initialize the hook to listen to conversations
+
+```tsx
+
+async streamMessages() {
+  const newStream = await this.convRef.streamMessages();
+  for await (const msg of newStream) {
+    const exists = this.messages.find((m) => m.id === msg.id);
+    if (!exists) {
+      this.messages.push(msg);
+    }
+  }
+}
+this.streamMessages();
 
 ```
 
