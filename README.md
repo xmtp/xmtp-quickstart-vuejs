@@ -101,21 +101,28 @@ Now using our hooks we are going to use the state to listen when XMTP is connect
 Later we are going to load our conversations and we are going to simulate starting a conversation with one of our bots
 
 ```tsx
-
-this.newConversation(xmtp, PEER_ADDRESS);
-
+// Function to start a new conversation
 async newConversation(xmtp_client, addressTo) {
+  // Check if we can message the given address
   if (await xmtp_client?.canMessage(PEER_ADDRESS)) {
+    // Create a new conversation with the given address
     const conversation = await xmtp_client.conversations.newConversation(
       addressTo,
     );
+
+    // Store the conversation reference
     this.convRef = conversation;
+
+    // Start streaming messages from this conversation
     this.streamMessages();
+
+    // Get the existing messages from the conversation
     const messages = await conversation.messages();
+
+    // Store the messages
     this.messages = messages;
-    console.log(this.messages.length);
   } else {
-    console.log("cant message because is not on the network.");
+    console.log("Can't message because is not on the network.");
   }
 }
 ```
@@ -126,20 +133,27 @@ In your component initialize the hook to listen to conversations
 
 ```tsx
 
+// Function to stream messages from conversation
 async streamMessages() {
+  // Start streaming messages from the conversation
   const newStream = await this.convRef.streamMessages();
+
+  // Iterate over each message in the stream
   for await (const msg of newStream) {
+    // Check if this message already exists in our messages array
     const exists = this.messages.find((m) => m.id === msg.id);
+
+    // If the message doesn't exist, add it to our messages array
     if (!exists) {
       this.messages.push(msg);
     }
   }
 }
-this.streamMessages();
-
 ```
 
 #### Troubleshooting
+
+The Node Buffer API must be polyfilled in some cases. To do so, add the buffer dependency to your project and then polyfill it in your entry file.
 
 ##### VueCLI
 
@@ -177,9 +191,7 @@ import { Buffer } from "buffer";
 window.Buffer = window.Buffer || Buffer;
 ```
 
-##### Buffer polyfill
-
-The Node Buffer API must be polyfilled in some cases. To do so, add the buffer dependency to your project and then polyfill it in your entry file.
+##### Vite
 
 1. Create a `polyfills.js` file with the following code
 
