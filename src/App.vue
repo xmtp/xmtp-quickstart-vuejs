@@ -4,11 +4,9 @@
       <button @click="connectWallet" class="btnXmtp">Connect Wallet</button>
     </div>
     <div v-if="isConnected && !isOnNetwork" class="xmtp">
-      <ConnectWallet theme="light" />
       <button @click="initXmtp" class="btnXmtp">Connect to XMTP</button>
     </div>
     <template v-if="isConnected && isOnNetwork && messages">
-      entra
       <Chat
         :client="clientRef"
         :conversation="convRef"
@@ -20,6 +18,7 @@
 <script>
 import { Client } from "@xmtp/xmtp-js";
 import { ethers } from "ethers";
+import Chat from "./components/Chat.vue";
 const PEER_ADDRESS = "0x937C0d4a6294cdfa575de17382c7076b579DC176";
 
 export default {
@@ -32,8 +31,9 @@ export default {
       convRef: false,
     };
   },
-  mounted() {
-    this.connectWallet();
+  async mounted() {
+    await this.connectWallet();
+    this.initXmtp(this.signer);
   },
   methods: {
     async streamMessages() {
@@ -57,7 +57,6 @@ export default {
           // get the signer
           this.signer = this.provider.getSigner();
           this.isConnected = !!this.signer;
-          this.initXmtp(this.signer);
         } catch (error) {
           console.error("User rejected request");
         }
@@ -71,6 +70,7 @@ export default {
           addressTo,
         );
         this.convRef = conversation;
+        this.streamMessages();
         const messages = await conversation.messages();
         this.messages = messages;
         console.log(this.messages.length);
@@ -84,6 +84,9 @@ export default {
       this.isOnNetwork = !!xmtp.address;
       this.clientRef = xmtp;
     },
+  },
+  components: {
+    Chat,
   },
 };
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div class="Chat">
-    sd
     <div class="messageContainer">
       <ul class="messageList">
         <li
@@ -10,7 +9,7 @@
           title="Click to log this message to the console"
           @click="logMessage(message)">
           <strong>
-            {{ message.senderAddress === address ? "You" : "Bot" }}:
+            {{ message.senderAddress === client.address ? "You" : "Bot" }}:
           </strong>
           <span>{{ message.content }}</span>
           <span class="date"> ({{ message.sent.toLocaleTimeString() }})</span>
@@ -33,12 +32,9 @@
 
 <script>
 export default {
-  name: "Chat",
+  props: ["client", "messageHistory", "conversation"],
   data() {
     return {
-      client: this.$parent.client,
-      messageHistory: this.$parent.messageHistory,
-      conversation: this.$parent.conversation,
       inputValue: "",
     };
   },
@@ -87,6 +83,9 @@ export default {
   width: 100%;
   justify-content: center;
   margin: 0;
+}
+.messageList {
+  padding: 0px;
 }
 
 .messageContainer {
