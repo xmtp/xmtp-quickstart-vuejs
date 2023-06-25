@@ -1,14 +1,14 @@
 # Developer Quickstart
 
-In this tutorial we are going to build a simple chat app using XMTP and NextJS. We are going to be chatting to a bot for simplicity. The bot is going to be a simple echo bot that will reply with the same message we send.
+In this tutorial we are going to build a simple chat app using XMTP and vuejs. We are going to be chatting to a bot for simplicity. The bot is going to be a simple echo bot that will reply with the same message we send.
 
 ### Demo App
 
-[<div class="div-header-github-link"></div> xmtp-quickstart-nextjs](https://github.com/fabriguespe/xmtp-quickstart-nextjs)
+[<div class="div-header-github-link"></div> xmtp-quickstart-vuejs](https://github.com/fabriguespe/xmtp-quickstart-vuejs)
 
 ```bash
-git clone git@github.com:fabriguespe/xmtp-quickstart-nextjs.git
-cd xmtp-quickstart-nextjs
+git clone git@github.com:fabriguespe/xmtp-quickstart-vuejs.git
+cd xmtp-quickstart-vuejs
 npm install
 npm run dev
 ```
@@ -20,7 +20,7 @@ The first step involves creating and configuring the Next.js application.
 To generate a new Next.js app, execute the following command in your terminal:
 
 ```bash
-npx create-next-app xmtp-quickstart-nextjs
+npx create-next-app xmtp-quickstart-vuejs
 
 ✔ Would you like to use TypeScript with this project? Yes
 ✔ Would you like to use ESLint with this project? Yes
@@ -40,7 +40,7 @@ npx create-next-app xmtp-quickstart-nextjs
 ### Install dependencies
 
 ```bash
-npm install @xmtp/xmtp-js
+npm install @xmtp/xmtp-js ethers@5.7.0
 ```
 
 ### Configuring the client
@@ -48,15 +48,42 @@ npm install @xmtp/xmtp-js
 First we need to initialize XMTP client using as signer our wallet connection of choice.
 
 ```tsx
-import Home from "@/components/Home";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+// Function to connect to the wallet
+async connectWallet() {
+  // Check if the ethereum object exists on the window object
+  if (typeof window.ethereum !== "undefined") {
+    try {
+      // Request access to the user's Ethereum accounts
+      await window.ethereum.enable();
 
-export default function Index() {
-  return (
-    <ThirdwebProvider activeChain="goerli">
-      <Home />
-    </ThirdwebProvider>
-  );
+      // Instantiate a new ethers provider with Metamask
+      this.provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      // Get the signer from the ethers provider
+      this.signer = this.provider.getSigner();
+
+      // Update the isConnected data property based on whether we have a signer
+      this.isConnected = !!this.signer;
+    } catch (error) {
+      console.error("User rejected request");
+    }
+  } else {
+    console.error("Metamask not found");
+  }
+}
+// Function to initialize XMTP
+async initXmtp(signer) {
+  // Create a new XMTP client with the signer
+  const xmtp = await Client.create(signer, { env: "production" });
+
+  // Start a new conversation
+  this.newConversation(xmtp, PEER_ADDRESS);
+
+  // Update the isOnNetwork data property based on whether we have an address
+  this.isOnNetwork = !!xmtp.address;
+
+  // Store the XMTP client reference
+  this.clientRef = xmtp;
 }
 ```
 
