@@ -69,8 +69,18 @@ export default {
   },
 };
 </script>
-
+<style>
+#app {
+  padding: 0px !important;
+}
+</style>
 <style scoped>
+ul {
+  list-style-type: none;
+}
+.messageList {
+  padding: 0px;
+}
 .Chat {
   background-color: white;
   margin: 0;
@@ -83,9 +93,6 @@ export default {
   width: 100%;
   justify-content: center;
   margin: 0;
-}
-.messageList {
-  padding: 0px;
 }
 
 .messageContainer {
