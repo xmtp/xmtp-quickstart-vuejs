@@ -123,39 +123,29 @@ useEffect(() => {
 In your component initialize the hook to listen to conversations
 
 ```tsx
-const [history, setHistory] = useState(null);
-const { messages } = useMessages(conversation);
-// Stream messages
-const onMessage = useCallback((message) => {
-  setHistory((prevMessages) => {
-    const msgsnew = [...prevMessages, message];
-    return msgsnew;
-  });
-}, []);
-useStreamMessages(conversation, onMessage);
+
+this.newConversation(xmtp, PEER_ADDRESS);
+
+async newConversation(xmtp_client, addressTo) {
+  if (await xmtp_client?.canMessage(PEER_ADDRESS)) {
+    const conversation = await xmtp_client.conversations.newConversation(
+      addressTo,
+    );
+    this.convRef = conversation;
+    this.streamMessages();
+    const messages = await conversation.messages();
+    this.messages = messages;
+    console.log(this.messages.length);
+  } else {
+    console.log("cant message because is not on the network.");
+  }
+},
+
 ```
 
-### Quickstarts 🏁
+#### Troubleshooting
 
-- [NextJS](https://github.com/fabriguespe/xmtp-quickstart-nextjs)
-- [ReactJS](https://github.com/fabriguespe/xmtp-quickstart-reactjs)
-- [Dart](https://github.com/xmtp/xmtp-android)
-- [Kotlin](https://github.com/xmtp/xmtp-flutter)
-- [Swift](https://github.com/xmtp/xmtp-ios)
-- [React Native](https://github.com/fabriguespe/xmtp-react-native-quickstart)
-- [React Hooks](https://github.com/fabriguespe/xmtp-hooks-quickstart)
-- [Firebase Functions](https://github.com/fabriguespe/xmtp-firebase-functions)
-- [NodeJS](https://github.com/fabriguespe/xmtp-quickstart-node)
-
-#### Need to send a test message?
-
-Message this XMTP message bot to get an immediate automated reply:
-
-- `gm.xmtp.eth` (`0x937C0d4a6294cdfa575de17382c7076b579DC176`)
-
-### Troubleshooting
-
-#### VueCLI
+##### VueCLI
 
 If you are usign older versions of Vue which used vue-cli proceed with these steps:
 
