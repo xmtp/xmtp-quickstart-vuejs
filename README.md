@@ -20,14 +20,19 @@ The first step involves creating and configuring the Next.js application.
 To generate a new Next.js app, execute the following command in your terminal:
 
 ```bash
-npx create-next-app xmtp-quickstart-vuejs
+ npm init vue@latest
 
-✔ Would you like to use TypeScript with this project? Yes
-✔ Would you like to use ESLint with this project? Yes
-✔ Would you like to use Tailwind CSS with this project?  Yes
-✔ Would you like to use `src/` directory with this project? No
-✔ Use App Router (recommended)? Yes
-✔ Would you like to customize the default import alias? No
+✔ Project name: … <your-project-name>
+✔ Add TypeScript? … No / Yes
+✔ Add JSX Support? … No / Yes
+✔ Add Vue Router for Single Page Application development? … No / Yes
+✔ Add Pinia for state management? … No / Yes
+✔ Add Vitest for Unit testing? … No / Yes
+✔ Add an End-to-End Testing Solution? … No / Cypress / Playwright
+✔ Add ESLint for code quality? … No / Yes
+✔ Add Prettier for code formatting? … No / Yes
+
+Done.
 ```
 
 ### Learning Objectives:
